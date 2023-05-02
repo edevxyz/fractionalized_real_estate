@@ -9,3 +9,8 @@ describe("FractionalRealEstate", function () {
     [owner, addr1, addr2] = await ethers.getSigners()
     fractionalRealEstate = await FractionalRealEstate.deploy()
   })
+
+describe("Deployment", function () {
+    it("Should set the right owner", async function () {
+      expect(await fractionalRealEstate.owner()).to.equal(owner.address)
+    })
