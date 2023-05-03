@@ -15,3 +15,13 @@ mapping (uint256 => string) private _tokenImages; // Added mapping to store IPFS
 constructor() ERC721("FractionalRealEstate", "FRE") {}
 
 }
+
+function mint(string memory imageIPFSHash) public payable {
+    require(totalSupply() < MAX_SUPPLY, "Maximum supply reached");
+    require(msg.value == MINT_PRICE, "Incorrect price");
+
+    _tokenIds.increment();
+    uint256 newTokenId = _tokenIds.current();
+    _tokenImages[newTokenId] = imageIPFSHash; // Stored IPFS hash in _tokenImages mapping
+    _mint(msg.sender, newTokenId);
+}
