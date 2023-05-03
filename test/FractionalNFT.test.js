@@ -27,3 +27,7 @@ it("Should initialize with the correct token name and symbol", async function ()
       expect(await fractionalRealEstate.totalSupply()).to.equal(1)
       expect(await fractionalRealEstate.tokenURI(1)).to.equal("https://ipfs.io/ipfs/QmHash1")
     })
+
+it("Should revert if minting with incorrect price", async function () {
+      await expect(fractionalRealEstate.connect(addr1).mint("QmHash2", { value: ethers.utils.parseEther("0.05") })).to.be.revertedWith("Incorrect price")
+    })
