@@ -25,3 +25,11 @@ function mint(string memory imageIPFSHash) public payable {
     _tokenImages[newTokenId] = imageIPFSHash; // Stored IPFS hash in _tokenImages mapping
     _mint(msg.sender, newTokenId);
 }
+
+function tokenURI(uint256 tokenId) public view override returns (string memory) {
+require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+
+string memory baseURI = "https://ipfs.io/ipfs/";  
+return string(abi.encodePacked(baseURI, _tokenImages[tokenId]));   
+
+}

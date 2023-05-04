@@ -31,3 +31,12 @@ it("Should initialize with the correct token name and symbol", async function ()
 it("Should revert if minting with incorrect price", async function () {
       await expect(fractionalRealEstate.connect(addr1).mint("QmHash2", { value: ethers.utils.parseEther("0.05") })).to.be.revertedWith("Incorrect price")
     })
+
+    it("Should revert if maximum supply is reached", async function () {
+      for (let i = 1; i <= 1000; i++) {
+        await fractionalRealEstate.connect(addr1).mint(`QmHash${i}`, { value: ethers.utils.parseEther("0.1") })
+      }
+      await expect(fractionalRealEstate.connect(addr1).mint("QmHash1001", { value: ethers.utils.parseEther("0.1") })).to.be.revertedWith("Maximum supply reached")
+    })
+  })
+ 
