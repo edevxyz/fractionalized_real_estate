@@ -5,7 +5,7 @@ describe("FractionalRealEstate", function () {
   let FractionalRealEstate, fractionalRealEstate, owner, addr1, addr2
 
   beforeEach(async () => {
-    FractionalRealEstate = await ethers.getContractFactory("FractionalRealEstate")
+    FractionalRealEstate = await ethers.getContractFactory("FractionalRealEstate");
     [owner, addr1, addr2] = await ethers.getSigners()
     fractionalRealEstate = await FractionalRealEstate.deploy()
   })
@@ -69,3 +69,10 @@ describe("Set Token Images", function () {
 it("Should revert if called by a non-owner", async function () {
       await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash")).to.be.revertedWith("Ownable: caller is not the owner")
     })
+
+it("Should revert if all tokens are not minted", async function () {
+      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+      await expect(fractionalRealEstate.setTokenImages("QmFolderHash")).to.be.revertedWith("All tokens must be minted before setting images")
+    })
+  })
+})
