@@ -50,10 +50,10 @@ describe("Withdraw function", function () {
     })
 
     it("Should revert if a non-owner tries to withdraw", async function () {
-      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") });
-      await expect(fractionalRealEstate.connect(addr1).withdraw()).to.be.revertedWith("Ownable: caller is not the owner");
-    });
-  });    
+      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+      await expect(fractionalRealEstate.connect(addr1).withdraw()).to.be.revertedWith("Ownable: caller is not the owner")
+    })
+  })    
 
 it("Should revert if called by a non-owner", async function () {
       await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash")).to.be.revertedWith("Ownable: caller is not the owner")

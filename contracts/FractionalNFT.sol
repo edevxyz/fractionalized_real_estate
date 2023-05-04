@@ -39,4 +39,10 @@ function withdraw() public onlyOwner {
     uint256 balance = address(this).balance;
     payable(owner()).transfer(balance);  
 }
+function setTokenImages(string memory folderIPFSHash) public onlyOwner {
+    require(totalSupply() == MAX_SUPPLY, "All tokens must be minted before setting images");
+    for (uint256 i = 1; i <= MAX_SUPPLY; i++) {
+    _tokenImages[i] = folderIPFSHash; 
+}
+}
 }
