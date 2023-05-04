@@ -9,16 +9,19 @@ contract FractionalRealEstate is ERC721, Ownable {
 using Counters for Counters.Counter;
 Counters.Counter private _tokenIds;
 uint256 public constant MAX_SUPPLY = 1000;
-uint256 public constant MINT_PRICE = 0.1 ether;
-mapping (uint256 => string) private _tokenImages; // Added mapping to store IPFS hash for each token
 
-constructor() ERC721("FractionalRealEstate", "FRE") {}
+function totalSupply() public view returns (uint256) {
+    return _tokenIds.current();   
 
 }
 
+constructor() ERC721("FractionalRealEstate", "FRE") {}
+
+
+
 function mint(string memory imageIPFSHash) public payable {
     require(totalSupply() < MAX_SUPPLY, "Maximum supply reached");
-    require(msg.value == MINT_PRICE, "Incorrect price");
+    require(msg.value == 0.1 ether, "Incorrect price");
 
     _tokenIds.increment();
     uint256 newTokenId = _tokenIds.current();
@@ -26,10 +29,17 @@ function mint(string memory imageIPFSHash) public payable {
     _mint(msg.sender, newTokenId);
 }
 
+mapping (uint256 => string) private _tokenImages; // Added mapping to store IPFS hash for each token
+
 function tokenURI(uint256 tokenId) public view override returns (string memory) {
 require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
 string memory baseURI = "https://ipfs.io/ipfs/";  
 return string(abi.encodePacked(baseURI, _tokenImages[tokenId]));   
 
+}
+
+function withdraw() public onlyOwner {
+    uint256 balance = address(this).balance;
+    owner().transfer(balance);   
 }

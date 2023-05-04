@@ -39,4 +39,7 @@ it("Should revert if minting with incorrect price", async function () {
       await expect(fractionalRealEstate.connect(addr1).mint("QmHash1001", { value: ethers.utils.parseEther("0.1") })).to.be.revertedWith("Maximum supply reached")
     })
   })
- 
+
+it("Should revert if called by a non-owner", async function () {
+      await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash")).to.be.revertedWith("Ownable: caller is not the owner")
+    })
