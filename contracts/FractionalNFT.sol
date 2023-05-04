@@ -12,12 +12,9 @@ uint256 public constant MAX_SUPPLY = 1000;
 
 function totalSupply() public view returns (uint256) {
     return _tokenIds.current();   
-
 }
 
 constructor() ERC721("FractionalRealEstate", "FRE") {}
-
-
 
 function mint(string memory imageIPFSHash) public payable {
     require(totalSupply() < MAX_SUPPLY, "Maximum supply reached");
@@ -36,10 +33,10 @@ require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
 string memory baseURI = "https://ipfs.io/ipfs/";  
 return string(abi.encodePacked(baseURI, _tokenImages[tokenId]));   
-
 }
 
 function withdraw() public onlyOwner {
     uint256 balance = address(this).balance;
-    owner().transfer(balance);   
+    payable(owner()).transfer(balance);  
 }
+

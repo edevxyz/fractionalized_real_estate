@@ -40,6 +40,15 @@ it("Should revert if minting with incorrect price", async function () {
     })
   })
 
+describe("Withdraw function", function () {
+    it("Should allow the owner to withdraw the contract balance", async function () {
+      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+      const initialBalance = await owner.getBalance()
+      await fractionalRealEstate.withdraw()
+      const finalBalance = await owner.getBalance()
+      expect(finalBalance.sub(initialBalance)).to.equal(ethers.utils.parseEther("0.1"))
+    })
+
 it("Should revert if called by a non-owner", async function () {
       await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash")).to.be.revertedWith("Ownable: caller is not the owner")
     })
