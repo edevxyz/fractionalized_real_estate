@@ -42,13 +42,18 @@ it("Should revert if minting with incorrect price", async function () {
 
 describe("Withdraw function", function () {
     it("Should allow the owner to withdraw the contract balance", async function () {
-      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
-      const initialBalance = await owner.getBalance()
-      await fractionalRealEstate.withdraw()
-      const finalBalance = await owner.getBalance()
-      expect(finalBalance.sub(initialBalance)).to.equal(ethers.utils.parseEther("0.1"))
-    })
+    await fractionalRealEstate.connect(addr1).mint("QmTestImageHash1", { value: ethers.utils.parseEther("0.1") })
+    const initialOwnerBalance = await owner.getBalance()
+    const contractBalance = await ethers.provider.getBalance(fractionalRealEstate.address)
 
+    const tx = await fractionalRealEstate.withdraw()
+    const receipt = await tx.wait()
+
+    const gasUsed = receipt.gasUsed.mul(tx.gasPrice)
+    const finalOwnerBalance = await owner.getBalance()
+
+    expect(finalOwnerBalance).to.equal(initialOwnerBalance.add(contractBalance).sub(gasUsed))
+  })
     it("Should revert if a non-owner tries to withdraw", async function () {
       await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
       await expect(fractionalRealEstate.connect(addr1).withdraw()).to.be.revertedWith("Ownable: caller is not the owner")
