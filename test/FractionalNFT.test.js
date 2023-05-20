@@ -60,24 +60,25 @@ describe("Withdraw function", function () {
     })
   })    
 
-// describe("Set Token Images", function () {
-//     it("Should set token images when called by the owner and all tokens are minted", async function () {
-//       for (let i = 1; i <= 1000; i++) {
-//         await fractionalRealEstate.connect(addr1).mint(`QmHash${i}`, { value: ethers.utils.parseEther("0.1") })
-//       }
-//       await fractionalRealEstate.setTokenImages("QmFolderHash")
-//       for (let i = 1; i <= 1000; i++) {
-//         expect(await fractionalRealEstate.tokenURI(i)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
-//       }
-//     })
+describe("Set Token Images", function () {
+    it("Should set token images when called by the owner (not only when everything has been minted)", async function () {
+      for (let i = 1; i <= 1000; i++) {
+        await fractionalRealEstate.connect(addr1).mint(`QmHash${i}`, { value: ethers.utils.parseEther("0.1") })
+      }
+      await fractionalRealEstate.setTokenImages("QmFolderHash")
+      for (let i = 1; i <= 1000; i++) {
+        expect(await fractionalRealEstate.tokenURI(i)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
+      }
+    })
 
-// it("Should revert if called by a non-owner", async function () {
-//       await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash")).to.be.revertedWith("Ownable: caller is not the owner")
-//     })
+ it("Should revert if called by a non-owner", async function () {
+       await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash")).to.be.revertedWith("Ownable: caller is not the owner")
+     })
 
-// it("Should revert if all tokens are not minted", async function () {
-//       await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
-//       await expect(fractionalRealEstate.setTokenImages("QmFolderHash")).to.be.revertedWith("All tokens must be minted before setting images")
-//     })
-//   })
+// uncomment this to  see the test fail to test whether all tokens do not have to be minted to call
+//it("Should revert if all tokens are not minted", async function () {
+//      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+//      await expect(fractionalRealEstate.setTokenImages("QmFolderHash")).to.be.revertedWith("All tokens must be minted before setting images")
+//    })
+  })
 })

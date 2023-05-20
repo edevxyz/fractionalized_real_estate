@@ -24,8 +24,6 @@ function mint(string memory imageIPFSHash) public payable {
     uint256 newTokenId = _tokenIds.current();
     _tokenImages[newTokenId] = imageIPFSHash; // Stored IPFS hash in _tokenImages mapping
     _mint(msg.sender, newTokenId);
- // Set token image immediately after minting
-    _tokenImages[newTokenId] = imageIPFSHash;
 }
 
 mapping (uint256 => string) private _tokenImages; // Added mapping to store IPFS hash for each token
@@ -42,10 +40,10 @@ function withdraw() public onlyOwner {
     uint256 balance = address(this).balance;
     payable(owner()).transfer(balance);  
 }
-//function setTokenImages(string memory folderIPFSHash) public onlyOwner {
-//    require(totalSupply() == MAX_SUPPLY, "All tokens must be minted before setting images");
-//    for (uint256 i = 1; i <= MAX_SUPPLY; i++) {
-//    _tokenImages[i] = folderIPFSHash; 
-//}
-//}
+function setTokenImages(string memory folderIPFSHash) public onlyOwner {
+    for (uint256 i = 1; i <= MAX_SUPPLY; i++) {
+        _tokenImages[i] = folderIPFSHash;
+    }
+}
+
 }
