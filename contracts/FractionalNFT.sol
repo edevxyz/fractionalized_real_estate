@@ -24,25 +24,28 @@ function mint(string memory imageIPFSHash) public payable {
     uint256 newTokenId = _tokenIds.current();
     _tokenImages[newTokenId] = imageIPFSHash; // Stored IPFS hash in _tokenImages mapping
     _mint(msg.sender, newTokenId);
+ // Set token image immediately after minting
+    _tokenImages[newTokenId] = imageIPFSHash;
 }
 
 mapping (uint256 => string) private _tokenImages; // Added mapping to store IPFS hash for each token
 
 function tokenURI(uint256 tokenId) public view override returns (string memory) {
-require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+    require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
-string memory baseURI = "https://ipfs.io/ipfs/";  
-return string(abi.encodePacked(baseURI, _tokenImages[tokenId]));   
+    string memory baseURI = "https://ipfs.io/ipfs/";
+    string memory tokenImageHash = _tokenImages[tokenId];
+    return string(abi.encodePacked(baseURI, tokenImageHash));
 }
 
 function withdraw() public onlyOwner {
     uint256 balance = address(this).balance;
     payable(owner()).transfer(balance);  
 }
-function setTokenImages(string memory folderIPFSHash) public onlyOwner {
-    require(totalSupply() == MAX_SUPPLY, "All tokens must be minted before setting images");
-    for (uint256 i = 1; i <= MAX_SUPPLY; i++) {
-    _tokenImages[i] = folderIPFSHash; 
-}
-}
+//function setTokenImages(string memory folderIPFSHash) public onlyOwner {
+//    require(totalSupply() == MAX_SUPPLY, "All tokens must be minted before setting images");
+//    for (uint256 i = 1; i <= MAX_SUPPLY; i++) {
+//    _tokenImages[i] = folderIPFSHash; 
+//}
+//}
 }
