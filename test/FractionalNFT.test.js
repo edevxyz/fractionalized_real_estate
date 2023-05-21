@@ -81,4 +81,54 @@ describe("Set Token Images", function () {
 //      await expect(fractionalRealEstate.setTokenImages("QmFolderHash")).to.be.revertedWith("All tokens must be minted before setting images")
 //    })
   })
+describe("payRent", function() {
+it("Should distribute rent correctly among token holders", async function () {
+  // Mint tokens for addr1 and addr2
+  await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+  await fractionalRealEstate.connect(addr2).mint("QmHash2", { value: ethers.utils.parseEther("0.1") })
+
+  // Check initial balances
+  const initialBalance1 = await addr1.getBalance()
+  const initialBalance2 = await addr2.getBalance()
+
+  // Pay rent
+  const rentAmount = ethers.utils.parseEther("1");
+  await fractionalRealEstate.connect(owner).payRent({ value: rentAmount })
+
+  // Check final balances
+  const finalBalance1 = await addr1.getBalance()
+  const finalBalance2 = await addr2.getBalance()
+
+  // Verify that the rent was distributed correctly
+  expect(finalBalance1).to.equal(initialBalance1.add(rentAmount.div(2)))
+  expect(finalBalance2).to.equal(initialBalance2.add(rentAmount.div(2)))
+})
+
+it("Should not allow rent payment when no tokens have been minted", async function () {
+  const rentAmount = ethers.utils.parseEther("1")
+  await expect(fractionalRealEstate.connect(owner).payRent({ value: rentAmount })).to.be.revertedWith("No tokens have been minted yet")
+})
+
+
+it("Should distribute excess rent payment proportionally among token holders", async function () {
+  await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+  await fractionalRealEstate.connect(addr2).mint("QmHash2", { value: ethers.utils.parseEther("0.1") })
+
+  const initialBalance1 = await addr1.getBalance()
+  const initialBalance2 = await addr2.getBalance()
+
+  const excessRentAmount = ethers.utils.parseEther("1.5");
+  await fractionalRealEstate.connect(owner).payRent({ value: excessRentAmount })
+
+  const finalBalance1 = await addr1.getBalance()
+  const finalBalance2 = await addr2.getBalance()
+
+  const expectedRentPerToken = excessRentAmount.div(2)
+  expect(finalBalance1).to.equal(initialBalance1.add(expectedRentPerToken))
+  expect(finalBalance2).to.equal(initialBalance2.add(expectedRentPerToken))
+})
+})
+
+
+
 })

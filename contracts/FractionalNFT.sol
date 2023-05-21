@@ -46,4 +46,15 @@ function setTokenImages(string memory folderIPFSHash) public onlyOwner {
     }
 }
 
+function payRent() public payable {
+    uint256 totalTokens = totalSupply();
+    require(totalTokens > 0, "No tokens have been minted yet");
+    uint256 rentPerToken = msg.value / totalTokens;
+    for (uint256 i = 1; i <= totalTokens; i++) {
+        address tokenHolder = ownerOf(i);
+        uint256 rentOwed = balanceOf(tokenHolder) * rentPerToken;
+        payable(tokenHolder).transfer(rentOwed);
+    }
+}
+
 }
