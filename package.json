@@ -126,6 +126,7 @@
     "diff": "^5.0.0",
     "difflib": "^0.2.4",
     "dir-glob": "^3.0.1",
+    "dotenv": "^16.0.3",
     "ecc-jsbn": "^0.1.2",
     "elliptic": "^6.5.4",
     "emoji-regex": "^8.0.0",
