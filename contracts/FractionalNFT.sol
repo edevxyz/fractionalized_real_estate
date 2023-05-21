@@ -21,13 +21,12 @@ contract FractionalRealEstate is ERC721, Ownable {
     constructor() ERC721("FractionalRealEstate", "FRE") {}
 
     // Function to mint a new token with the given IPFS hash
-    function mint(string memory imageIPFSHash) public payable {
+    function mint() public payable {
         require(totalSupply() < MAX_SUPPLY, "Maximum supply reached");
         require(msg.value == 0.1 ether, "Incorrect price");
 
         _tokenIds.increment(); // Increment the token ID counter
         uint256 newTokenId = _tokenIds.current(); // Get the new token ID
-        _tokenImages[newTokenId] = imageIPFSHash; // Store IPFS hash in _tokenImages mapping
         _mint(msg.sender, newTokenId); // Mint the new token
     }
 

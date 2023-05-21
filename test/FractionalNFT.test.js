@@ -30,22 +30,23 @@ describe("FractionalRealEstate", function () {
   describe("Minting", function () {
     // Test if a token is minted successfully and the IPFS hash is stored
     it("Should mint a token successfully and store the IPFS hash", async function () {
-      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
       expect(await fractionalRealEstate.totalSupply()).to.equal(1)
-      expect(await fractionalRealEstate.tokenURI(1)).to.equal("https://ipfs.io/ipfs/QmHash1")
+      await fractionalRealEstate.setTokenImages("QmFolderHash")
+      expect(await fractionalRealEstate.tokenURI(1)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
     })
 
     // Test if minting reverts when the price is incorrect
     it("Should revert if minting with incorrect price", async function () {
-      await expect(fractionalRealEstate.connect(addr1).mint("QmHash2", { value: ethers.utils.parseEther("0.05") })).to.be.revertedWith("Incorrect price")
+      await expect(fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.05") })).to.be.revertedWith("Incorrect price")
     })
 
     // Test if minting reverts when the maximum supply is reached
     it("Should revert if maximum supply is reached", async function () {
       for (let i = 1; i <= 1000; i++) {
-        await fractionalRealEstate.connect(addr1).mint(`QmHash${i}`, { value: ethers.utils.parseEther("0.1") })
+        await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
       }
-      await expect(fractionalRealEstate.connect(addr1).mint("QmHash1001", { value: ethers.utils.parseEther("0.1") })).to.be.revertedWith("Maximum supply reached")
+      await expect(fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })).to.be.revertedWith("Maximum supply reached")
     })
   })
 
@@ -53,7 +54,7 @@ describe("FractionalRealEstate", function () {
   describe("Withdraw function", function () {
     // Test if the owner can withdraw the contract balance
     it("Should allow the owner to withdraw the contract balance", async function () {
-      await fractionalRealEstate.connect(addr1).mint("QmTestImageHash1", { value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
       const initialOwnerBalance = await owner.getBalance()
       const contractBalance = await ethers.provider.getBalance(fractionalRealEstate.address)
 
@@ -68,7 +69,7 @@ describe("FractionalRealEstate", function () {
 
     // Test if a non-owner is prevented from withdrawing
     it("Should revert if a non-owner tries to withdraw", async function () {
-      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
       await expect(fractionalRealEstate.connect(addr1).withdraw()).to.be.revertedWith("Ownable: caller is not the owner")
     })
   })
@@ -78,7 +79,7 @@ describe("FractionalRealEstate", function () {
     // Test if the owner can set token images when not all tokens are minted
     it("Should set token images when called by the owner (not only when everything has been minted)", async function () {
       for (let i = 1; i <= 1000; i++) {
-        await fractionalRealEstate.connect(addr1).mint(`QmHash${i}`, { value: ethers.utils.parseEther("0.1") })
+        await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
       }
       await fractionalRealEstate.setTokenImages("QmFolderHash")
       for (let i = 1; i <= 1000; i++) {
@@ -97,8 +98,8 @@ describe("FractionalRealEstate", function () {
     // Test if rent is distributed correctly among token holders
     it("Should distribute rent correctly among token holders", async function () {
       // Mint tokens for addr1 and addr2
-      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
-      await fractionalRealEstate.connect(addr2).mint("QmHash2", { value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr2).mint({ value: ethers.utils.parseEther("0.1") })
 
       // Check initial balances
       const initialBalance1 = await addr1.getBalance()
@@ -126,8 +127,8 @@ describe("FractionalRealEstate", function () {
     // Test if excess  rent payment is distributed proportionally among token holders
     it("Should distribute excess rent payment proportionally among token holders", async function () {
       // Mint tokens for addr1 and addr2
-      await fractionalRealEstate.connect(addr1).mint("QmHash1", { value: ethers.utils.parseEther("0.1") })
-      await fractionalRealEstate.connect(addr2).mint("QmHash2", { value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr2).mint({ value: ethers.utils.parseEther("0.1") })
 
       // Check initial balances
       const initialBalance1 = await addr1.getBalance()
