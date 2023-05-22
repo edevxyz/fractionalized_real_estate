@@ -49,10 +49,10 @@ contract FractionalRealEstate is ERC721, Ownable {
     }
 
     // Function to set the IPFS hash for all tokens
-    function setTokenImages(string memory folderIPFSHash) public onlyOwner {
-        for (uint256 i = 1; i <= MAX_SUPPLY; i++) {
-            _tokenImages[i] = folderIPFSHash;
-        }
+    function setTokenImages(
+        string memory folderIPFSHash,
+        uint256 tokenId) public onlyOwner {
+        _tokenImages[tokenId] = folderIPFSHash;
     }
 
     // Function to distribute rent payments to token holders

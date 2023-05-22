@@ -30,11 +30,11 @@ describe("FractionalRealEstate", function () {
   describe("Minting", function () {
     // Test if a token is minted successfully and the IPFS hash is stored
     it("Should mint a token successfully and store the IPFS hash", async function () {
-      await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
-      expect(await fractionalRealEstate.totalSupply()).to.equal(1)
-      await fractionalRealEstate.setTokenImages("QmFolderHash")
-      expect(await fractionalRealEstate.tokenURI(1)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
-    })
+    await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
+    expect(await fractionalRealEstate.totalSupply()).to.equal(1)
+    await fractionalRealEstate.setTokenImages("QmFolderHash", 1)
+    expect(await fractionalRealEstate.tokenURI(1)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
+  })
 
     // Test if minting reverts when the price is incorrect
     it("Should revert if minting with incorrect price", async function () {
@@ -78,18 +78,17 @@ describe("FractionalRealEstate", function () {
   describe("Set Token Images", function () {
     // Test if the owner can set token images when not all tokens are minted
     it("Should set token images when called by the owner (not only when everything has been minted)", async function () {
-      for (let i = 1; i <= 1000; i++) {
-        await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
-      }
-      await fractionalRealEstate.setTokenImages("QmFolderHash")
-      for (let i = 1; i <= 1000; i++) {
-        expect(await fractionalRealEstate.tokenURI(i)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
-      }
+      await fractionalRealEstate.connect(addr1).mint({ value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.connect(addr2).mint({ value: ethers.utils.parseEther("0.1") })
+      await fractionalRealEstate.setTokenImages("QmFolderHash", 1)
+      await fractionalRealEstate.setTokenImages("QmFolderHash", 2)
+      expect(await fractionalRealEstate.tokenURI(1)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
+      expect(await fractionalRealEstate.tokenURI(2)).to.equal("https://ipfs.io/ipfs/QmFolderHash")
     })
 
     // Test if a non-owner is prevented from setting token images
     it("Should revert if called by a non-owner", async function () {
-      await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash")).to.be.revertedWith("Ownable: caller is not the owner")
+      await expect(fractionalRealEstate.connect(addr1).setTokenImages("QmFolderHash", 1)).to.be.revertedWith("Ownable: caller is not the owner")
     })
   })
 
