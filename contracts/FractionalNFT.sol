@@ -5,16 +5,28 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 // FractionalRealEstate contract inherits from ERC721 and Ownable
 contract FractionalRealEstate is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds; // Counter for token IDs
     uint256 public constant MAX_SUPPLY = 1000; // Maximum supply of tokens
+    string private _tokenBaseURI;
+
+    string private baseExtension = ".json";
 
     // Returns the total supply of tokens
     function totalSupply() public view returns (uint256) {
         return _tokenIds.current();
+    }
+
+    function tokenBaseURI() public view returns (string memory) {
+    return _tokenBaseURI;
+    }
+
+    function setBaseURI(string memory baseURI) public onlyOwner {
+    _tokenBaseURI = baseURI;
     }
 
     // Constructor to set the token name and symbol
@@ -37,9 +49,10 @@ contract FractionalRealEstate is ERC721, Ownable {
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
 
-        string memory baseURI = "https://ipfs.io/ipfs/";
+        string memory baseURI = _tokenBaseURI;
         string memory tokenImageHash = _tokenImages[tokenId];
-        return string(abi.encodePacked(baseURI, tokenImageHash));
+        return bytes(baseURI).length > 0
+        ? string(abi.encodePacked(_tokenBaseURI, tokenImageHash, "/", Strings.toString(tokenId), baseExtension)): "";
     }
 
     // Function to withdraw the contract balance to the owner
