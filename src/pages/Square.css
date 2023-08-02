@@ -1,0 +1,62 @@
+.qkacz5i7-4x-1-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1440px;
+  height: 1414px;
+  object-fit: cover;
+}
+.about,
+.fractional {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  font-weight: 300;
+}
+.about {
+  top: 1115px;
+  left: 637px;
+  font-weight: 200;
+  color: var(--color-sienna);
+}
+.buttondefault {
+  width: 216px;
+  position: absolute;
+  top: 599px;
+  left: 588px;
+  cursor: pointer;
+}
+.faq {
+  position: absolute;
+  top: 1170px;
+  left: 493px;
+  font-size: 36px;
+  font-weight: 200;
+  color: var(--color-sienna);
+}
+.square-child {
+  border: 0;
+  position: absolute;
+  top: 768px;
+  left: 899px;
+  background-color: #d9d9d9;
+  width: 541px;
+  height: 294px;
+}
+.real-estate-nfts {
+  position: absolute;
+  top: -10px;
+  left: 493px;
+  font-weight: 300;
+}
+.square {
+  position: relative;
+  background-color: var(--color-white);
+  width: 100%;
+  height: 1414px;
+  overflow: hidden;
+  text-align: left;
+  font-size: var(--font-size-38xl);
+  color: var(--color-white);
+  font-family: var(--font-m-plus-1);
+}
