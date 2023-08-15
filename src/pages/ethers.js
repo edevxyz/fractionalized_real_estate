@@ -10,8 +10,8 @@ if (typeof window.ethereum !== "undefined") {
 const provider = new ethers.providers.JsonRpcProvider('http://localhost:8585');
 
 // The contract address and ABI
-const contractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'; 
-const contractABI = [
+ export const contractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'; 
+ export const contractABI = [
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -494,6 +494,15 @@ const contractABI = [
 
 // Create a contract instance
 const contract = new ethers.Contract(contractAddress, contractABI, provider.getSigners);
+
+async function connect() {
+  if (window.ethereum) {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+  } else {
+    console.log("No wallet");
+  }
+}  
 
 // Example mint function
 async function mint() {

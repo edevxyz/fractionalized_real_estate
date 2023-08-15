@@ -21,6 +21,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",
     "@types/jest": "^29.5.2",
+    "@web3-react/walletconnect-connector": "^6.2.13",
     "abbrev": "^1.0.9",
     "abort-controller": "^3.0.0",
     "abstract-level": "^1.0.3",

@@ -4,10 +4,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import "./global.css";
-
+import { Button } from 'react-bootstrap';
 const container = document.getElementById("root");
 const root = createRoot(container);
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 root.render(
   <BrowserRouter>
     <App />

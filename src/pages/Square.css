@@ -19,12 +19,19 @@
   font-weight: 200;
   color: var(--color-sienna);
 }
+
 .buttondefault {
   width: 216px;
   position: absolute;
   top: 599px;
   left: 588px;
   cursor: pointer;
+}
+
+.connect-wallet {
+  position: absolute;
+  top: -19px;
+  right: -1240px;
 }
 .faq {
   position: absolute;
